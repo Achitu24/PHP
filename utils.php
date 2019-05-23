@@ -1,59 +1,6 @@
 <?php
 
 require_once("credentiale.inc");
-session_start();
-
-function verificaUserAuth() {
-    if (!isset($_SESSION['userid'])) {
-        die('Utilizatorul nu este autentificat');
-    }
-
-    return $_SESSION['userid'];
-}
-
-function verificaEchipa($con, $teamName) {
-    $query = "SELECT id FROM teams WHERE teams.name = '" . $teamName . "'";
-    print_r($query);
-
-    $result = $con->query($query);
-    if($result ->num_rows !== 1){
-        die("Nume invalid");
-    }
-
-    $tid = -1;
-    while($aux = $result->fetch_assoc()){
-        $tid = $aux['id'];
-    }
-
-    return $tid;
-}
-
-function verificaUserInEchipa($con, $tid, $uid) {
-    $query = "SELECT userId FROM users_teams WHERE users_teams.teamId = " . $tid . " AND users_teams.userId = " .  $uid;
-    $result = $con->query($query);
-    
-    if ($result->num_rows !== 1) {
-        die("Utilizatorul nu are dreptul sa vada membrii echipei.");
-    }
-}
-
-function copyPutData() {
-    parse_str(file_get_contents("php://input"), $_PUT);
-	foreach ($_PUT as $key => $value) {
-		unset($_PUT[$key]);
-		$_PUT[str_replace('amp;', '', $key)] = $value;
-    }
-    $_REQUEST = array_merge($_REQUEST, $_PUT);
-}
-
-function copyDeleteData() {
-    parse_str(file_get_contents("php://input"), $_DELETE);
-	foreach ($_DELETE as $key => $value) {
-		unset($_DELETE[$key]);
-		$_DELETE[str_replace('amp;', '', $key)] = $value;
-	}
-	$_REQUEST = array_merge($_REQUEST, $_DELETE);
-}
 
 function conexiuneCalendar(){
     #credentiale
